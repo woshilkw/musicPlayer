@@ -1,0 +1,271 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+ul,li{
+    list-style: none;
+}
+.wrap{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: url(../images/bg.jpg) no-repeat;
+    background-size: 100% 100%;
+    position: fixed;
+    .player {
+        width: 800px;
+        height: 550px;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        margin-left: -400px;
+        margin-top: -272px;
+        .player-top {
+            width: 100%;
+            height: 60px;
+            background-color: #39abd8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            z-index: 30;
+            img{
+                height: 22px;
+                margin-left: 26px;
+            }
+            input{
+                width: 300px;
+                height: 36px;
+                border-radius: 20px;
+                border: 0;
+                padding: 10px;
+                margin-right: 26px;
+                background-color:  rgba(255, 255, 255, 0.45);
+                background-position: 265px;
+                background-repeat: no-repeat;
+                background-image: url("../images/zoom.png");
+            }
+        }
+      
+        .player-middle {
+            background-color: rgba(255, 255, 255, 0.5);
+            height: 435px;
+            position: relative;
+            .player-middle-left {
+                width: 200px;
+                height: 435px;
+                position: absolute;
+                padding: 10px;
+                .left-list::-webkit-scrollbar {
+                    display:none;
+                }
+                .left-list{
+                    width: 180;
+                    height: 415px;
+                    overflow-y: auto;
+                    overflow-x: hidden;
+                    .list-item {
+                        width: 180px;
+                        height: 40px;
+                        background-color: rgba(240, 240, 240, 0.3);
+                        color: #333;
+                        padding-left: 10px;
+                        font-size: 12px;
+                        display: flex;
+                        align-items: center;
+                        a {
+                            width: 17px;
+                            height: 17px;
+                            background-size: 100%;
+                            margin-right: 5px;
+                            display: inline-block;
+                            background-image: url("../images/play.png");
+                        }
+                      
+                        b {
+                            font-weight: normal;
+                            width: 122px;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                        }
+                      
+                        span {
+                            width: 23px;
+                            height: 17px;
+                            display: inline-block;
+                          i {
+                            display: block;
+                            width: 100%;
+                            height: 100%;
+                            cursor: pointer;
+                            background: url(../images/table.png) left -48px no-repeat;
+                          }
+                        }
+                      }
+                }
+                img{
+                    position: absolute;
+                    right: 0;
+                    top: 0;
+                    cursor: pointer;
+                }
+            }
+           
+            .player-middle-middle.playing .middle-one{
+                transform: rotate(0)
+            }
+            .player-middle-middle {
+                width: 400px;
+                height: 435px;
+                position: absolute;
+                left: 200px;
+                top: 0px;
+                .disc,
+                .cover{
+                    animation-play-state: running;
+                }
+                .middle-one{
+                    position: absolute;
+                    left: 200px;
+                    top: -10px;
+                    z-index: 10;
+                    transform: rotate(-25deg);
+                    transform-origin: 12px 12px;
+                    transition: 1s;
+                }
+                
+                .animation{
+                    animation-name: Rotate;
+                    animation-iteration-count: infinite;
+                    animation-play-state: paused;
+                    animation-timing-function: linear;
+                    animation-duration: 5s;
+                }
+                .middle-two{
+                    position: absolute;
+                    left: 73px;
+                    top: 60px;
+                    z-index: 9;
+                }
+                .middle-three{
+                    position: absolute;
+                    left: 125px;
+                    top: 112px;
+                    width: 150px;
+                    height: 150px;
+                    border-radius: 75px;
+                    z-index: 8;
+                }
+            }
+
+            .player-middle-right {
+                width: 200px;
+                height: 485px;
+                position: absolute;
+                left: 600px;
+                top: 0;
+                padding: 25px 10px;
+                .right-title {
+                    position: absolute;
+                    top: 10px;
+                }
+                .right-list::-webkit-scrollbar {
+                    display:none;
+                }
+                .right-list {
+                    width: 180px;
+                    height: 410px;
+                    overflow: auto;
+                   
+                    dl {
+                        position: relative;
+                        padding-top: 10px;
+                        padding-left: 55px;
+                        margin-bottom: 20px;
+                        dt {
+                            position: absolute;
+                            left: 4px;
+                            top: 10px;
+                          img {
+                            width: 40px;
+                            height: 40px;
+                            border-radius: 50%;
+
+                          }
+                        }
+                      
+                        .name {
+                            font-weight: bold;
+                            color: #333;
+                            padding-top: 5px;
+                        }
+                        dd{
+                            font-size: 12px;
+                        }
+                        .detail{
+                            color: #666;
+                            margin-top: 5px;
+                            line-height: 18px;
+                        }
+                      }
+                }
+                
+                .right-img {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                }
+
+            }
+        }
+      
+        .player-bottom {
+           width: 800px;
+           height: 50px;
+           background-color: #f1f3f4;
+           border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+           .myaudio{
+               width: 800px;
+               height: 40px;
+           }
+        }
+        .video_con{
+            video {
+                position: fixed;
+                width: 800px;
+                height: 546px;
+                left: 50%;
+                top: 50%;
+                margin-top: -273px;
+                transform: translateX(-50%);
+                z-index: 990;
+              }
+              .mask {
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                left: 0;
+                top: 0;
+                z-index: 980;
+                background-color: rgba(0, 0, 0, 0.8);
+              }
+              .shutoff {
+                position: fixed;
+                width: 40px;
+                height: 40px;
+                background: url("../images/shutoff.png") no-repeat;
+                left: 50%;
+                margin-left: 400px;
+                margin-top: -273px;
+                top: 50%;
+                z-index: 995;
+              }
+        }
+        
+    }
+}

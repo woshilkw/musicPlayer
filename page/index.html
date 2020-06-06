@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/index.css">
+</head>
+<body>
+    <div class="wrap">
+        <div class="player">
+            <!-- 播放器顶部开始 -->
+            <section class="player-top">
+                <img src="../images/player_title.png" alt="">
+                <input type="text" @keyup.13="search" v-model="name">
+            </section>
+            <!-- 播放器顶部结束 -->
+            <!-- 播放器主题内容开始 -->
+            <section class="player-middle">
+                <!-- 主题内容左侧开始 -->
+                <section class="player-middle-left" ref="player-middle-left">
+                    <ul class="left-list">
+                        <li class="list-item" v-for="item,index in musicList">
+                            <a href="javascript:" @click="comment(item.id)"></a>
+                            <b>{{item.name}}</b>
+                            <span>
+                                <i @click="playMv(item.mvid)" v-if="item.mvid!=0"></i>
+                            </span>
+                        </li>
+                    </ul>
+                    <img src="../images/line.png" alt="">
+                </section>
+                <!-- 主题内容左侧结束 -->
+                <!-- 主题内容中间部分开始 -->
+                <section class="player-middle-middle" :class="{playing:isPlay}">
+                    <img src="../images/player_bar.png" alt="" class="middle-one disc">
+                    <img src="../images/disc.png" alt="" class="middle-two animation cover" >
+                    <img :src="coverUrl===''?'../images/cover.png':coverUrl"  alt="" class="middle-three animation">
+                </section>
+                <!-- 主题内容中间部分结束 -->
+                <!-- 主题内容右侧开始 -->
+                <section class="player-middle-right" ref="player-middle-right">
+                    <h5 class="right-title">热门留言</h5>
+                    <div class="right-list">
+                        <dl v-for="item,index in comments">
+                            <dt>
+                                <img :src="item.user.avatarUrl" alt="">
+                            </dt>
+                            <dd class="name">{{item.user.nickname}}</dd>
+                            <dd class="detail">{{item.content}}</dd>
+                        </dl>
+                    </div>
+                    <img src="../images/line.png" alt="" class="right-img">
+                </section>
+                <!-- 主题内容右侧结束 -->
+            </section>
+            <!-- 播放器主题内容结束 -->
+            <!-- 播放器底部开始 -->
+            <section class="player-bottom">
+                <audio ref="audio" :src="musicUrl" controls autoplay loop class="myaudio" @play="play" @pause="pause"></audio>
+            </section>
+            <!-- 播放器底部结束 -->
+            <!-- 播放器MV开始 -->
+            <div class="video_con" v-show="showMv">
+                <video ref='video' :src="mvUrl" controls></video>
+                <div class="mask" @click="closeMv"></div>
+            </div>
+            <!-- 播放器MV结束 -->
+        </div>
+    </div>
+</body>
+<script src="../js/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    axios.defaults.baseURL = "https://apimusic.linweiqin.com/"
+    let vm = new Vue({
+        el: ".wrap",
+        data: {
+            // 搜索歌名
+            name: "",
+            // 音乐列表
+            musicList: [],
+            // 热评列表
+            comments: [],
+            // 歌曲地址
+            musicUrl: "",
+            // 封面图片地址
+            coverUrl: "",
+            // // 是否在播放
+            isPlay: false,
+            // mv地址
+            mvUrl: "",
+            // 显示mv状态开关
+            showMv: false
+        },
+        methods: {
+            // 关闭mv界面
+            closeMv: function(){
+                this.showMv = false;
+                this.$refs.video.pause()
+            },
+            // audio的pause事件 pause 暂停
+            pause: function(){
+                // 将状态改为 暂停
+                this.isPlay = false;
+            },
+            // audio的play事件  play 播放中
+            play: function(){
+                // 将状态改为 播放中
+                this.isPlay = true;
+                // 清空mv的信息
+                this.mvUrl = "";
+            },
+            // 播放MV
+            playMv: function(id){
+                if(id){
+                    this.showMv = true;
+                    //  获取mv地址
+                    axios.get("/mv/url?id=" + id).then(response =>{
+                        console.log(response);
+                        // 暂停歌曲播放
+                        this.$refs.audio.pause();
+                        this.mvUrl = response.data.data.url;
+                    })
+                }
+            },
+            // 搜索歌曲
+            search: function(){
+                // 输入为空,不执行下面的代码
+                if(!this.name){
+                    return;
+                }
+                // 根据输入的name,搜索歌曲
+                axios.get("/search?keywords=" + this.name).then(response =>{
+                    // 将搜索到的所有歌曲放入musicList音乐列表中
+                    this.musicList = response.data.result.songs;
+                    console.log(this.musicList);
+                })
+            },
+            // 获取热门评论  播放歌曲  获取封面
+            comment: function(id){
+                // 获取热门评论
+                axios.get("/comment/hot?type=0&id=" + id).then(response =>{
+                    this.comments = response.data.hotComments;
+                    console.log(this.comments);
+                })
+                // 获取播放歌曲url
+                axios.get("/song/url?id=" + id).then(response =>{
+                    console.log("歌曲url:" + response.data.data[0].url);
+                    this.musicUrl = response.data.data[0].url;
+                })
+
+                // 获取歌曲封面
+                axios.get('/song/detail?ids=' + id).then(response =>{
+                    console.log(response)
+                    this.coverUrl = response.data.songs[0].al.picUrl
+                })
+
+            },
+            
+        }
+    })
+</script>
+</html>
